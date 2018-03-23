@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Wrapper to invoke piptool.py with vendored third-party dependencies.
+"""Wrapper to invoke whl.py with vendored third-party dependencies.
 
 This wrapper must work under Python 2.7.*, or any Python 3.* >= 3.4.0.
 It must also work under Linux, Mac OS, Windows, and any other
@@ -32,7 +32,7 @@ import sys
 
 _this_file = __file__
 if (_this_file is None) or not os.path.isfile(_this_file):
-    sys.exit("piptool_wrapper.py failed.  Cannot determine __file__")
+    sys.exit("whltool_wrapper.py failed.  Cannot determine __file__")
 
 _tool_dir = os.path.dirname(_this_file)
 _root_dir = os.path.abspath(os.path.join(_tool_dir, '..'))
@@ -55,5 +55,5 @@ assert wheel.__version__ == '0.30.0'
 assert pip.__version__ == '9.0.1'
 
 # Invoke tool
-import piptool
-piptool.main()
+import whl
+whl.main()
