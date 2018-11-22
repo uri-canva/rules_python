@@ -90,7 +90,7 @@ parser.add_argument('--python_interpreter', action='store',
 parser.add_argument('--name', action='store',
                     help=('The namespace of the import.'))
 
-parser.add_argument('--input', action='store',
+parser.add_argument('--input', action='append',
                     help=('The requirements.txt file to import.'))
 
 parser.add_argument('--output', action='store',
@@ -156,9 +156,10 @@ def determine_possible_extras(whls):
 def main():
   args = parser.parse_args()
 
-  # https://github.com/pypa/pip/blob/9.0.1/pip/__init__.py#L209
-  if pip_main(["wheel", "-w", args.directory, "-r", args.input]):
-    sys.exit(1)
+  for input in args.input:
+    # https://github.com/pypa/pip/blob/9.0.1/pip/__init__.py#L209
+    if pip_main(["wheel", "-w", args.directory, "-r", input]):
+      sys.exit(1)
 
   # Enumerate the .whl files we downloaded.
   def list_whls():

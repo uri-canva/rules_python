@@ -23,23 +23,27 @@ def _shared_pip_import_impl(python_interpreter, repository_ctx):
   repository_ctx.file("BUILD", "")
 
   # To see the output, pass: quiet=False
-  result = repository_ctx.execute([
+  args = [
     python_interpreter, repository_ctx.path(repository_ctx.attr._script),
     "--python_interpreter", python_interpreter,
     "--name", repository_ctx.attr.name,
-    "--input", repository_ctx.path(repository_ctx.attr.requirements),
+  ]
+  for requirements in repository_ctx.attr.requirements:
+    args = args + ["--input", repository_ctx.path(requirements)]
+  args = args + [
     "--output", repository_ctx.path("requirements.bzl"),
     "--directory", repository_ctx.path(""),
-  ])
+  ]
+  result = repository_ctx.execute(args)
 
   if result.return_code:
     fail("pip_import failed: %s (%s)" % (result.stdout, result.stderr))
 
 _shared_attrs = {
-    "requirements": attr.label(
+    "requirements": attr.label_list(
+        allow_empty = False,
         allow_files = True,
         mandatory = True,
-        single_file = True,
     ),
     "_script": attr.label(
         executable = True,
